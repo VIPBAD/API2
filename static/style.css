@@ -50,6 +50,22 @@ body {
 
 input[type="range"] {
   flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 5px;
+  background: #607d8b;
+  outline: none;
+  border-radius: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .controls, .actions {

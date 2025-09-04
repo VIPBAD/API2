@@ -11,46 +11,61 @@ const favBtn = document.getElementById('favBtn');
 
 let stopped = false;
 
-document.getElementById('thumb').src = thumb;
+document.getElementById('thumb').src = thumb || 'default-thumbnail.jpg';
 document.getElementById('title').innerText = title;
 document.getElementById('artist').innerText = 'Now Playing...';
 
-audio.src = audioSrc;
-audio.autoplay = true;
+audio.src = audioSrc || '';
+audio.preload = 'metadata';
+audio.controls = false; // Removed default controls to use custom ones
 audio.loop = false;
 
 audio.addEventListener('loadedmetadata', () => {
   totalTime.innerText = formatTime(audio.duration);
+  if (audio.duration && !isNaN(audio.duration)) {
+    seek.max = audio.duration;
+  }
   tryAutoPlay();
 });
 
 audio.addEventListener('timeupdate', () => {
-  seek.value = (audio.currentTime / audio.duration) * 100;
-  currentTime.innerText = formatTime(audio.currentTime);
+  if (!stopped && audio.duration) {
+    seek.value = audio.currentTime;
+    currentTime.innerText = formatTime(audio.currentTime);
+  }
 });
 
 seek.addEventListener('input', () => {
-  audio.currentTime = (seek.value / 100) * audio.duration;
+  audio.currentTime = seek.value;
 });
 
 function tryAutoPlay() {
-  if (!stopped) {
+  if (!stopped && audio.src) {
     audio.play().catch(err => {
       console.warn("Autoplay blocked:", err);
+      alert("Please click play to start the audio.");
     });
   }
 }
 
 function togglePlay() {
-  if (stopped) return;
-  if (audio.paused) audio.play();
-  else audio.pause();
+  if (stopped) {
+    stopped = false;
+    audio.currentTime = 0;
+  }
+  if (audio.paused) {
+    audio.play().catch(err => console.warn("Play error:", err));
+  } else {
+    audio.pause();
+  }
 }
 
 function stopAudio() {
   audio.pause();
   audio.currentTime = 0;
   stopped = true;
+  currentTime.innerText = '0:00';
+  seek.value = 0;
 }
 
 function endPlayer() {
@@ -59,11 +74,19 @@ function endPlayer() {
 }
 
 function rewind() {
-  if (!stopped) audio.currentTime = Math.max(0, audio.currentTime - 10);
+  if (!stopped && audio.currentTime > 10) {
+    audio.currentTime -= 10;
+  } else {
+    audio.currentTime = 0;
+  }
 }
 
 function forward() {
-  if (!stopped) audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+  if (!stopped && audio.currentTime < audio.duration - 10) {
+    audio.currentTime += 10;
+  } else {
+    audio.currentTime = audio.duration;
+  }
 }
 
 function toggleFav() {

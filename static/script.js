@@ -18,11 +18,11 @@ document.getElementById('artist-name').innerText = 'Now Playing...';
 
 audio.src = audioSrc;
 audio.volume = 1;
-audio.play().catch(err => console.warn("Autoplay blocked:", err));
 
 audio.addEventListener('loadedmetadata', () => {
   totalTime.innerText = formatTime(audio.duration);
   seekBar.max = audio.duration;
+  audio.play().catch(err => console.warn("Autoplay blocked:", err));
 });
 
 audio.addEventListener('timeupdate', () => {

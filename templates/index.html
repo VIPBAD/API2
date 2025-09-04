@@ -2,41 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Flex Music Player</title>
+  <title>Music Player App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="container fade-in">
-    <button class="join-btn">🎧 Join Music Player</button>
-
-    <div class="player-card bounce">
-      <img id="thumb" class="album-img" src="" alt="Thumbnail">
-      <div class="song-title" id="title">Loading...</div>
-      <div class="artist" id="artist">Now Playing...</div>
-
-      <div class="timebar">
-        <span id="current">0:00</span>
-        <input type="range" id="seek" min="0" max="100" value="0">
-        <span id="total">0:00</span>
+  <div class="container">
+    <div class="player-card">
+      <img id="album-art" src="" alt="Album Art" class="album-art">
+      <div class="song-info">
+        <div id="song-title" class="song-title">Loading...</div>
+        <div id="artist-name" class="artist-name">Now Playing...</div>
       </div>
-
+      <div class="progress-bar">
+        <span id="current-time">0:00</span>
+        <input type="range" id="seek-bar" min="0" max="100" value="0">
+        <span id="total-time">0:00</span>
+      </div>
       <div class="controls">
-        <button onclick="rewind()">⏮️</button>
-        <button onclick="togglePlay()">▶️</button>
-        <button onclick="forward()">⏭️</button>
+        <button onclick="rewind()" class="control-btn">⏮️</button>
+        <button onclick="togglePlay()" id="play-btn" class="control-btn">▶️</button>
+        <button onclick="forward()" class="control-btn">⏭️</button>
       </div>
-
+      <div class="volume-control">
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+      </div>
       <div class="actions">
-        <button id="favBtn" onclick="toggleFav()">🤍</button>
-        <button onclick="stopAudio()">Stop</button>
-        <button onclick="endPlayer()">End</button>
+        <button onclick="toggleFav()" id="fav-btn" class="action-btn">🤍</button>
+        <button onclick="stopAudio()" class="action-btn">⏹️</button>
+        <button onclick="endPlayer()" class="action-btn">⏏️</button>
       </div>
-
-      <audio id="audio" preload="auto" controls></audio>
+      <audio id="audio-player" preload="auto"></audio>
     </div>
   </div>
-
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-</html>
+  </html>

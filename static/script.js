@@ -1,62 +1,53 @@
 const urlParams = new URLSearchParams(window.location.search);
-const audioSrc = decodeURIComponent(urlParams.get('audio') || '');
+const audioSrc = decodeURIComponent(urlParams.get('url') || '');
 const thumb = decodeURIComponent(urlParams.get('thumb') || '');
 const title = decodeURIComponent(urlParams.get('title') || 'Unknown Title');
 
-const audio = document.getElementById('audio');
-const seek = document.getElementById('seek');
-const currentTime = document.getElementById('current');
-const totalTime = document.getElementById('total');
-const favBtn = document.getElementById('favBtn');
-
+const audio = document.getElementById('audio-player');
+const seekBar = document.getElementById('seek-bar');
+const currentTime = document.getElementById('current-time');
+const totalTime = document.getElementById('total-time');
+const playBtn = document.getElementById('play-btn');
+const favBtn = document.getElementById('fav-btn');
+const volumeControl = document.getElementById('volume');
 let stopped = false;
 
-document.getElementById('thumb').src = thumb || 'default-thumbnail.jpg';
-document.getElementById('title').innerText = title;
-document.getElementById('artist').innerText = 'Now Playing...';
+document.getElementById('album-art').src = thumb;
+document.getElementById('song-title').innerText = title;
+document.getElementById('artist-name').innerText = 'Now Playing...';
 
-audio.src = audioSrc || '';
-audio.preload = 'metadata';
-audio.controls = false; // Removed default controls to use custom ones
-audio.loop = false;
+audio.src = audioSrc;
+audio.volume = 1;
+audio.play().catch(err => console.warn("Autoplay blocked:", err));
 
 audio.addEventListener('loadedmetadata', () => {
   totalTime.innerText = formatTime(audio.duration);
-  if (audio.duration && !isNaN(audio.duration)) {
-    seek.max = audio.duration;
-  }
-  tryAutoPlay();
+  seekBar.max = audio.duration;
 });
 
 audio.addEventListener('timeupdate', () => {
-  if (!stopped && audio.duration) {
-    seek.value = audio.currentTime;
+  if (!stopped) {
+    seekBar.value = audio.currentTime;
     currentTime.innerText = formatTime(audio.currentTime);
   }
 });
 
-seek.addEventListener('input', () => {
-  audio.currentTime = seek.value;
+seekBar.addEventListener('input', () => {
+  audio.currentTime = seekBar.value;
 });
 
-function tryAutoPlay() {
-  if (!stopped && audio.src) {
-    audio.play().catch(err => {
-      console.warn("Autoplay blocked:", err);
-      alert("Please click play to start the audio.");
-    });
-  }
-}
+volumeControl.addEventListener('input', () => {
+  audio.volume = volumeControl.value;
+});
 
 function togglePlay() {
-  if (stopped) {
-    stopped = false;
-    audio.currentTime = 0;
-  }
+  if (stopped) return;
   if (audio.paused) {
-    audio.play().catch(err => console.warn("Play error:", err));
+    audio.play();
+    playBtn.textContent = '⏸️';
   } else {
     audio.pause();
+    playBtn.textContent = '▶️';
   }
 }
 
@@ -64,8 +55,7 @@ function stopAudio() {
   audio.pause();
   audio.currentTime = 0;
   stopped = true;
-  currentTime.innerText = '0:00';
-  seek.value = 0;
+  playBtn.textContent = '▶️';
 }
 
 function endPlayer() {
@@ -74,19 +64,11 @@ function endPlayer() {
 }
 
 function rewind() {
-  if (!stopped && audio.currentTime > 10) {
-    audio.currentTime -= 10;
-  } else {
-    audio.currentTime = 0;
-  }
+  if (!stopped) audio.currentTime = Math.max(0, audio.currentTime - 10);
 }
 
 function forward() {
-  if (!stopped && audio.currentTime < audio.duration - 10) {
-    audio.currentTime += 10;
-  } else {
-    audio.currentTime = audio.duration;
-  }
+  if (!stopped) audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
 }
 
 function toggleFav() {

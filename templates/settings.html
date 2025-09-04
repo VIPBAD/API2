@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telegram Music - Settings</title>
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      width: 100%;
+      background: #1e1e1e;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 300px;
+    }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      color: #bbb;
+      text-decoration: none;
+    }
+    .menu-item:hover {
+      background: #2e2e2e;
+    }
+    .menu-item span {
+      margin-left: 10px;
+    }
+    .slider-container {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+    }
+    .slider {
+      width: 100%;
+      margin-left: 10px;
+    }
+    .toggle {
+      margin-left: 10px;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 300px;
+      background: #1e1e1e;
+      padding: 10px 0;
+    }
+    .footer button {
+      background: none;
+      border: none;
+      color: #bbb;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button>← Back</button>
+    <div>Telegram Music</div>
+    <div>...</div>
+  </div>
+  <div class="menu">
+    <a href="#" class="menu-item">
+      <span>🎨</span><span>Theme</span><span>Auto (follows Telegram)</span>
+    </a>
+    <a href="#" class="menu-item">
+      <span>🌈</span><span>Accent Colors</span><span>Customize colors for each theme</span>
+    </a>
+    <div class="slider-container">
+      <span>📡</span><span>Playback sync</span><span>Auto-resync if drift exceeds threshold</span>
+      <input type="range" class="slider" min="0" max="10" value="5">
+      <span>5.0s</span>
+    </div>
+    <div class="menu-item">
+      <span>🌱</span><span>Data Saver</span><span>Hide thumbnails to reduce data usage</span>
+      <input type="checkbox" class="toggle">
+    </div>
+    <a href="#" class="menu-item">
+      <span>ℹ</span><span>About</span><span>Tg-tune v1.0</span>
+    </a>
+  </div>
+  <div class="footer">
+    <button>🏠</button>
+    <button>🔍</button>
+    <button>⬆</button>
+    <button>Ⓜ</button>
+  </div>
+</body>
+</html>

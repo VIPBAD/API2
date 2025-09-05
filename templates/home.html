@@ -5,27 +5,77 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{{ title }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background: #111;
+      color: #fff;
+    }
+    .topbar .title {
+      font-weight: bold;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar .title img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #444;
+    }
+    .center-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      gap: 15px;
+    }
+    .big-icon img {
+      width: 150px;
+      height: 150px;
+      border-radius: 20px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .join-btn {
+      background: #1da1f2;
+      color: white;
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body class="mobile">
   <header class="topbar">
     <button class="back-btn" onclick="location.href='/'">✕</button>
-    <div class="title">Telegram Music</div>
+    <div class="title">
+      <img src="{{ avatar }}" alt="avatar">
+      Telegram Music
+    </div>
     <div class="top-actions">▾</div>
   </header>
 
   <main class="center-screen">
     <div class="big-icon">
-      <div class="icon-inner">♪</div>
+      <img src="{{ thumb }}" alt="Album Art">
     </div>
-    <h1 class="app-title">Telegram Music</h1>
+    <h1 class="app-title">{{ title }}</h1>
 
     <a class="join-btn big" href="{{ url_for('player') }}?audio={{ audio_url|urlencode }}&title={{ title|urlencode }}&thumb={{ thumb|urlencode }}">
       Join Music
     </a>
   </main>
 
-  <nav class="bottom-nav">
-  </nav>
+  <nav class="bottom-nav"></nav>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

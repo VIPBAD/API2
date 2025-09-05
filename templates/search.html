@@ -21,13 +21,20 @@
 
     <section class="results">
       {% for r in results %}
-      <a class="result-item" href="{{ url_for('player') }}?audio={{ r.audio|urlencode }}&title={{ r.title|urlencode }}&thumb={{ r.thumb|urlencode }}">
-        <img src="{{ r.thumb }}" alt="" />
-        <div class="r-info">
-          <div class="r-title">{{ r.title }}</div>
-          <div class="r-sub">{{ r.artist }}</div>
+      <div class="result-row">
+        <a class="result-item" href="{{ url_for('player') }}?audio={{ r.audio|urlencode }}&title={{ r.title|urlencode }}&thumb={{ r.thumb|urlencode }}">
+          <img src="{{ r.thumb }}" alt="" />
+          <div class="r-info">
+            <div class="r-title">{{ r.title }}</div>
+            <div class="r-sub">{{ r.artist }}</div>
+          </div>
+        </a>
+        <!-- Play with cookie: picks a cookie on server and then opens player with cookie param -->
+        <div class="r-actions">
+          <button onclick="playWithCookie('{{ r.audio }}','{{ r.title|replace(\"'\",\"\\'\") }}','{{ r.thumb }}','{{ r.artist }}')">Play</button>
+          <button onclick="addFavoriteFromSearch(event,'{{ r.title }}','{{ r.artist }}','{{ r.audio }}','{{ r.thumb }}')">♡</button>
         </div>
-      </a>
+      </div>
       {% endfor %}
     </section>
   </main>
@@ -38,6 +45,34 @@
     <a class="nav-item" href="{{ url_for('profile') }}">👤</a>
   </nav>
 
+  <script>
+    async function playWithCookie(audio, title, thumb, artist){
+      try {
+        const res = await fetch('/pick_cookie');
+        const data = await res.json();
+        if (!data.ok) {
+          alert('Could not pick cookie: ' + (data.error || 'unknown'));
+          return;
+        }
+        const cookie = encodeURIComponent(data.cookie || '');
+        // go to player with cookie param (server or youtube helper may use it)
+        const params = new URLSearchParams({
+          audio: audio,
+          title: title,
+          thumb: thumb,
+          artist: artist,
+          cookie: cookie
+        });
+        // player will save username if provided via session or query params
+        location.href = '/player?' + params.toString();
+      } catch (e) {
+        alert('Error picking cookie: ' + e);
+      }
+    }
+
+    // existing addFavoriteFromSearch is provided by static/script.js in repo, we reuse it
+  </script>
+
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-</html>
+  </html>

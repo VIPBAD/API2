@@ -21,19 +21,13 @@
 
     <section class="results">
       {% for r in results %}
-      <div class="result-item">
+      <a class="result-item" href="{{ url_for('player') }}?audio={{ r.audio|urlencode }}&title={{ r.title|urlencode }}&thumb={{ r.thumb|urlencode }}">
         <img src="{{ r.thumb }}" alt="" />
         <div class="r-info">
           <div class="r-title">{{ r.title }}</div>
           <div class="r-sub">{{ r.artist }}</div>
         </div>
-        <div class="r-actions">
-          <!-- Play immediately by navigating to /player with audio param -->
-          <a class="play-btn" href="{{ url_for('player') }}?audio={{ r.audio|urlencode }}&title={{ r.title|urlencode }}&thumb={{ r.thumb|urlencode }}">▶</a>
-          <!-- Optionally add to favorites via client JS -->
-          <button class="fav-small" onclick="addFavoriteFromSearch(event, '{{ r.title|e }}', '{{ r.artist|e }}', '{{ r.audio|e }}', '{{ r.thumb|e }}')">♡</button>
-        </div>
-      </div>
+      </a>
       {% endfor %}
     </section>
   </main>

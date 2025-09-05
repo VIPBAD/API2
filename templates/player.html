@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="mobile dark">
+  <header class="topbar">
+    <button class="back-btn" onclick="location.href='{{ url_for('home') }}'">←</button>
+    <div class="title">Now Playing</div>
+    <div class="top-actions">⋮</div>
+  </header>
+
+  <main class="player-screen">
+    <div class="album-wrap">
+      <img id="player-thumb" class="album-large" src="{{ thumb }}" alt="Album">
+    </div>
+
+    <div class="track-info">
+      <div class="track-title" id="title">{{ title }}</div>
+      <div class="track-artist" id="artist">{{ artist }}</div>
+    </div>
+
+    <div class="progress">
+      <span id="current">0:00</span>
+      <input id="seek" type="range" min="0" max="100" value="0" />
+      <span id="total">0:00</span>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl">⏮</button>
+      <button id="playBtn" class="play-prim" onclick="togglePlay()">⏵</button>
+      <button class="ctrl">⏭</button>
+    </div>
+
+    <div class="bottom-actions">
+      <button class="circle">♡</button>
+      <div class="spacer"></div>
+      <button class="circle">↻</button>
+    </div>
+
+    <audio id="audio" preload="auto" src="{{ audio_url }}"></audio>
+  </main>
+
+  <nav class="bottom-nav elevated">
+    <a class="nav-item" href="{{ url_for('home') }}">🏠</a>
+    <a class="nav-item" href="{{ url_for('search') }}">🔍</a>
+    <a class="nav-item active" href="{{ url_for('profile') }}">👤</a>
+  </nav>
+
+  <script>
+    // small inline initial values for JS to read
+    const initial = {
+      audioUrl: "{{ audio_url }}",
+      title: "{{ title }}",
+      thumb: "{{ thumb }}"
+    }
+  </script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

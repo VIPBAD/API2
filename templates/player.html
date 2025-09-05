@@ -29,23 +29,20 @@
       <span id="total">0:00</span>
     </div>
 
-    <!-- Volume slider added under progress -->
-    <div class="volume-row">
-      <span class="vol-label">🔊</span>
-      <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" />
-      <span class="vol-percent" id="volPercent">80%</span>
+    <div class="controls">
+      <button class="ctrl">⏮</button>
+      <button id="playBtn" class="play-prim" onclick="togglePlay()">⏵</button>
+      <button class="ctrl">⏭</button>
     </div>
 
-    <div class="controls">
-      <button class="ctrl" onclick="rewind()">⏮</button>
-      <button id="playBtn" class="play-prim" onclick="togglePlay()">⏵</button>
-      <button class="ctrl" onclick="forward()">⏭</button>
+    <div class="volume-control">
+      <input type="range" id="volume" min="0" max="1" step="0.1" value="1" oninput="setVolume(this.value)">
     </div>
 
     <div class="bottom-actions">
-      <button id="favBtn" class="circle" onclick="toggleFav()">♡</button>
+      <button class="circle">♡</button>
       <div class="spacer"></div>
-      <button class="circle" onclick="toggleRepeat()">↻</button>
+      <button class="circle">↻</button>
     </div>
 
     <audio id="audio" preload="auto" src="{{ audio_url }}"></audio>
@@ -63,6 +60,23 @@
       title: "{{ title }}",
       thumb: "{{ thumb }}"
     };
+
+    function togglePlay() {
+      const audio = document.getElementById('audio');
+      const playBtn = document.getElementById('playBtn');
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸';
+      } else {
+        audio.pause();
+        playBtn.textContent = '⏵';
+      }
+    }
+
+    function setVolume(value) {
+      const audio = document.getElementById('audio');
+      audio.volume = value;
+    }
   </script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

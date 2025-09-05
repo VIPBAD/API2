@@ -1,32 +1,22 @@
 import os
-import json
-from flask import Flask, request, render_template, url_for, jsonify, send_from_directory
-from search import search_bp
+from flask import Flask, request, render_template, url_for, redirect
 
 app = Flask(__name__)
-app.register_blueprint(search_bp)  # blueprint defines /search route
-
-DATA_DIR = os.path.join(os.getcwd(), "data")
-FAV_FILE = os.path.join(DATA_DIR, "favorites.json")
-os.makedirs(DATA_DIR, exist_ok=True)
-if not os.path.exists(FAV_FILE):
-    with open(FAV_FILE, "w") as f:
-        json.dump([], f)
 
 
 @app.route("/")
 def home():
-    # Do NOT show player UI here. Home only displays Join button (player opens on /player).
+    # keep reading params if the MINI app passes them, but home is mostly static
+    audio_url = request.args.get("audio", "")
     title = request.args.get("title", "Telegram Music")
     thumb = request.args.get("thumb", url_for('static', filename='img/default_album.png'))
-    # Keep audio param so MINI app can forward it into Join link, but do not play here.
-    audio_url = request.args.get("audio", "")
-    return render_template("home.html", title=title, thumb=thumb, audio_url=audio_url)
+    # Home page: show Join button which links to /player preserving params
+    return render_template("home.html", audio_url=audio_url, title=title, thumb=thumb)
 
 
 @app.route("/player")
 def player():
-    # Plays audio passed by query params.
+    # This route plays whatever audio_url is passed; unchanged behavior as you requested.
     audio_url = request.args.get("audio", "")
     title = request.args.get("title", "Unknown Title")
     thumb = request.args.get("thumb", url_for('static', filename='img/default_album.png'))
@@ -34,56 +24,30 @@ def player():
     return render_template("player.html", audio_url=audio_url, title=title, thumb=thumb, artist=artist)
 
 
+@app.route("/search")
+def search():
+    # sample placeholder results; you can extend search logic / API later
+    q = request.args.get("q", "")
+    results = [
+        {"title": "Rondi Tere Layi", "artist": "Speed Records", "thumb": url_for('static', filename='img/sample1.jpg'), "audio": ""},
+        {"title": "Sample Track", "artist": "Artist", "thumb": url_for('static', filename='img/sample2.jpg'), "audio": ""},
+    ]
+    return render_template("search.html", q=q, results=results)
+
+
 @app.route("/profile")
 def profile():
+    # Example profile values — your MINI app can fill via query params if needed.
     username = request.args.get("username", "VIPBAD")
     user_id = request.args.get("user_id", "8016771632")
     avatar = request.args.get("avatar", url_for('static', filename='img/avatar.png'))
-    # Load favorites from server-side file:
-    try:
-        with open(FAV_FILE, "r") as f:
-            favorites = json.load(f)
-    except Exception:
-        favorites = []
-    return render_template("profile.html", username=username, user_id=user_id, avatar=avatar, favorites=favorites)
-
+    return render_template("profile.html", username=username, user_id=user_id, avatar=avatar)
+    
 
 @app.route("/settings")
 def settings():
     return render_template("settings.html")
-
-
-# Simple API endpoints to manage favorites (used by client script)
-@app.route("/api/favorites", methods=["GET", "POST", "DELETE"])
-def api_favorites():
-    if request.method == "GET":
-        with open(FAV_FILE, "r") as f:
-            data = json.load(f)
-        return jsonify(data)
-
-    if request.method == "POST":
-        payload = request.json or {}
-        item = payload.get("item")
-        if not item:
-            return jsonify({"error": "no item provided"}), 400
-        with open(FAV_FILE, "r") as f:
-            data = json.load(f)
-        # avoid duplicates by audio url
-        if not any(x.get("audio") == item.get("audio") for x in data):
-            data.insert(0, item)  # newest first
-            with open(FAV_FILE, "w") as f:
-                json.dump(data, f, indent=2)
-        return jsonify({"status": "ok", "favorites": data})
-
-    if request.method == "DELETE":
-        payload = request.json or {}
-        audio_url = payload.get("audio")
-        with open(FAV_FILE, "r") as f:
-            data = json.load(f)
-        data = [x for x in data if x.get("audio") != audio_url]
-        with open(FAV_FILE, "w") as f:
-            json.dump(data, f, indent=2)
-        return jsonify({"status": "deleted", "favorites": data})
+    
 
 
 if __name__ == "__main__":

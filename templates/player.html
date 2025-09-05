@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background: #111;
+      color: #fff;
+    }
+    .topbar .title {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar .title img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid #444;
+    }
+    .controls button {
+      font-size: 26px;
+      background: none;
+      border: none;
+      color: #fff;
+      margin: 0 15px;
+    }
+    .play-prim {
+      font-size: 40px;
+      color: #1da1f2;
+    }
+    .bottom-actions {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 20px 0;
+    }
+    .circle {
+      font-size: 30px;
+      background: none;
+      border: none;
+      color: #ccc;
+      transition: 0.2s;
+    }
+    .circle.active {
+      color: red;
+    }
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px;
+      background: #111;
+    }
+    .nav-item {
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-item.active {
+      color: #1da1f2;
+    }
+    .nav-item span {
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body class="mobile dark">
+  <header class="topbar">
+    <button class="back-btn" onclick="location.href='{{ url_for('home') }}'">←</button>
+    <div class="title">
+      <img src="{{ avatar }}" alt="avatar">
+      Now Playing
+    </div>
+  </header>
+
+  <main class="player-screen">
+    <div class="album-wrap">
+      <img id="player-thumb" class="album-large" src="{{ thumb }}" alt="Album">
+    </div>
+
+    <div class="track-info">
+      <div class="track-title" id="title">{{ title }}</div>
+      <div class="track-artist" id="artist">{{ artist }}</div>
+    </div>
+
+    <div class="progress">
+      <span id="current">0:00</span>
+      <input id="seek" type="range" min="0" max="100" value="0" />
+      <span id="total">0:00</span>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl">⏮</button>
+      <button id="playBtn" class="play-prim" onclick="togglePlay()">⏵</button>
+      <button class="ctrl">⏭</button>
+    </div>
+
+    <div class="volume-control" style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+      <div style="font-size:14px;color:var(--muted)">Vol</div>
+      <input type="range" id="volume" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
+    </div>
+
+    <!-- Favorite + Repeat buttons -->
+    <div class="bottom-actions">
+      <button id="favBtn" class="circle" onclick="toggleFav()">♡</button>
+      <button id="repeatBtn" class="circle">↻</button>
+    </div>
+
+    <audio id="audio" preload="auto" src="{{ audio_url }}"></audio>
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="{{ url_for('home') }}">
+      <span>🏠</span> Home
+    </a>
+    <a class="nav-item" href="{{ url_for('search') }}">
+      <span>🔍</span> Search
+    </a>
+    <a class="nav-item active" href="{{ url_for('profile') }}">
+      <span>⚙️</span> Settings
+    </a>
+  </nav>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const favBtn = document.getElementById('favBtn');
+    const repeatBtn = document.getElementById('repeatBtn');
+
+    // toggle play/pause
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play().then(() => {
+          playBtn.textContent = '⏸';
+        }).catch(()=> {
+          playBtn.textContent = '⏵';
+        });
+      } else {
+        audio.pause();
+        playBtn.textContent = '⏵';
+      }
+    }
+
+    // volume
+    function setVolume(value) {
+      audio.volume = parseFloat(value);
+      localStorage.setItem('player_volume', audio.volume);
+    }
+
+    // progress
+    audio.addEventListener('timeupdate', () => {
+      const cur = Math.floor(audio.currentTime);
+      const total = Math.floor(audio.duration || 0);
+      function fmt(s){ return Math.floor(s/60)+':' + String(s%60).padStart(2,'0'); }
+      document.getElementById('current').textContent = fmt(cur);
+      document.getElementById('total').textContent = fmt(total);
+      const seek = document.getElementById('seek');
+      if (total > 0) seek.value = Math.floor((audio.currentTime / audio.duration) * 100);
+    });
+
+    document.getElementById('seek').addEventListener('input', function(){
+      if (!audio.duration) return;
+      audio.currentTime = (this.value / 100) * audio.duration;
+    });
+
+    // fav toggle
+    function toggleFav() {
+      favBtn.classList.toggle("active");
+      favBtn.textContent = favBtn.classList.contains("active") ? "❤️" : "♡";
+    }
+
+    // repeat toggle
+    repeatBtn.addEventListener("click", () => {
+      if (audio.loop) {
+        audio.loop = false;
+        repeatBtn.classList.remove("active");
+      } else {
+        audio.loop = true;
+        repeatBtn.classList.add("active");
+      }
+    });
+
+    // restore volume
+    const savedVol = localStorage.getItem('player_volume');
+    if (savedVol !== null) {
+      audio.volume = parseFloat(savedVol);
+      document.getElementById('volume').value = audio.volume;
+    }
+  </script>
+</body>
+</html>

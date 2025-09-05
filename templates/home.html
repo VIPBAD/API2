@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="mobile">
+  <header class="topbar">
+    <button class="back-btn" onclick="location.href='/'">✕</button>
+    <div class="title">Telegram Music</div>
+    <div class="top-actions">▾</div>
+  </header>
+
+  <main class="center-screen">
+    <div class="big-icon">
+      <div class="icon-inner">♪</div>
+    </div>
+    <h1 class="app-title">Telegram Music</h1>
+
+    <a class="join-btn big" href="{{ url_for('player') }}?audio={{ audio_url|urlencode }}&title={{ title|urlencode }}&thumb={{ thumb|urlencode }}">
+      Join Music
+    </a>
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="nav-item active" href="{{ url_for('home') }}">🏠</a>
+    <a class="nav-item" href="{{ url_for('search') }}">🔍</a>
+    <a class="nav-item" href="{{ url_for('profile') }}">👤</a>
+  </nav>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

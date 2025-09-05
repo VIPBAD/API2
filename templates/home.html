@@ -8,7 +8,9 @@
 </head>
 <body class="mobile">
   <header class="topbar">
+    <button class="back-btn" onclick="location.href='/'">✕</button>
     <div class="title">Telegram Music</div>
+    <div class="top-actions">▾</div>
   </header>
 
   <main class="center-screen">
@@ -17,8 +19,7 @@
     </div>
     <h1 class="app-title">Telegram Music</h1>
 
-    <!-- Join button navigates to /player and passes audio/title/thumb if present -->
-    <a class="join-btn big" id="joinBtn" href="{{ url_for('player') }}?audio={{ audio_url|urlencode }}&title={{ title|urlencode }}&thumb={{ thumb|urlencode }}">
+    <a class="join-btn big" href="{{ url_for('player') }}?audio={{ audio_url|urlencode }}&title={{ title|urlencode }}&thumb={{ thumb|urlencode }}">
       Join Music
     </a>
   </main>

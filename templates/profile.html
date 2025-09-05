@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="mobile dark">
+  <header class="topbar">
+    <button class="back-btn" onclick="location.href='{{ url_for('home') }}'">←</button>
+    <div class="title">Profile</div>
+    <div class="top-actions">⋮</div>
+  </header>
+
+  <main class="profile-screen">
+    <div class="profile-card">
+      <img class="avatar" src="{{ avatar }}" alt="avatar">
+      <div>
+        <div class="profile-name">{{ username }}</div>
+        <div class="profile-id">{{ user_id }}</div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="num">3</div>
+        <div class="label">Recent</div>
+      </div>
+      <div class="stat">
+        <div class="num">0</div>
+        <div class="label">Played</div>
+      </div>
+      <div class="stat">
+        <div class="num">0m</div>
+        <div class="label">Duration</div>
+      </div>
+    </div>
+
+    <div class="menu">
+      <a class="menu-item" href="#" onclick="showFavorites();return false;">
+        <div>
+          ♡ Favorites
+          <div class="sub">Your favourite songs</div>
+        </div>
+        <div>›</div>
+      </a>
+
+      <a class="menu-item" href="{{ url_for('settings') }}">
+        <div>
+          ⚙ Settings
+          <div class="sub">App settings and customization</div>
+        </div>
+        <div>›</div>
+      </a>
+
+      <a class="menu-item" href="#">
+        <div>
+          👥 Connected Users
+          <div class="sub">See who's listening</div>
+        </div>
+        <div>›</div>
+      </a>
+
+      <a class="menu-item" href="#">
+        <div>
+          ❓ FAQ
+          <div class="sub">Frequently asked questions</div>
+        </div>
+        <div>›</div>
+      </a>
+    </div>
+
+    <!-- Favorites panel -->
+    <section id="favoritesPanel" style="display:none;margin-top:16px;">
+      <h3 style="margin:6px 0 14px 6px;color:#cfd6dd">Favorites</h3>
+      <div id="favoritesList"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav elevated">
+    <a class="nav-item" href="{{ url_for('home') }}">🏠</a>
+    <a class="nav-item" href="{{ url_for('search') }}">🔍</a>
+    <a class="nav-item active" href="{{ url_for('profile') }}">👤</a>
+  </nav>
+
+  <script>
+    // Pass initial favorites to client so we can render quickly
+    window.initialFavorites = {{ favorites|tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

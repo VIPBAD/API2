@@ -29,16 +29,23 @@
       <span id="total">0:00</span>
     </div>
 
+    <!-- Volume slider added under progress -->
+    <div class="volume-row">
+      <span class="vol-label">🔊</span>
+      <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" />
+      <span class="vol-percent" id="volPercent">80%</span>
+    </div>
+
     <div class="controls">
-      <button class="ctrl">⏮</button>
+      <button class="ctrl" onclick="rewind()">⏮</button>
       <button id="playBtn" class="play-prim" onclick="togglePlay()">⏵</button>
-      <button class="ctrl">⏭</button>
+      <button class="ctrl" onclick="forward()">⏭</button>
     </div>
 
     <div class="bottom-actions">
-      <button class="circle">♡</button>
+      <button id="favBtn" class="circle" onclick="toggleFav()">♡</button>
       <div class="spacer"></div>
-      <button class="circle">↻</button>
+      <button class="circle" onclick="toggleRepeat()">↻</button>
     </div>
 
     <audio id="audio" preload="auto" src="{{ audio_url }}"></audio>
@@ -51,12 +58,11 @@
   </nav>
 
   <script>
-    // small inline initial values for JS to read
     const initial = {
       audioUrl: "{{ audio_url }}",
       title: "{{ title }}",
       thumb: "{{ thumb }}"
-    }
+    };
   </script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

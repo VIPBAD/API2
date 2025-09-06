@@ -38,6 +38,11 @@
             margin: 0;
             font-size: 16px;
         }
+        .profile-info p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            color: #888;
+        }
         .stats {
             display: flex;
             justify-content: space-around;
@@ -91,8 +96,11 @@
         </div>
     </div>
     <div class="profile-info">
-        <img src="https://graph.org/file/38652f7c83abd11b039c0-1d0a46d1e4e762cbc6.jpg" alt="Profile">
-        <h2>{{ username }} Bad Music</h2>
+        <img src="{{ photo_url }}" alt="Profile">
+        <div>
+            <h2>{{ username }}</h2>
+            <p>User ID: {{ user_id }}</p>
+        </div>
     </div>
     <div class="stats">
         <div><strong>3</strong><span>Recent</span></div>

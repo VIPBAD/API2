@@ -4,6 +4,7 @@ import yt_dlp
 import logging
 import glob
 import random
+import json
 
 app = Flask(__name__)
 
@@ -84,8 +85,22 @@ def search():
 
 @app.route("/profile")
 def profile():
-    username = request.args.get("username", "VIP")
-    return render_template("profile.html", username=username)
+    # Get Telegram initData from query parameters
+    init_data = request.args.get("initData", "")
+    user_data = {}
+    if init_data:
+        try:
+            # Parse initData (simplified, in real use validate with bot token)
+            params = dict(param.split('=') for param in init_data.split('&'))
+            user = json.loads(params.get('user', '{}'))
+            user_data = {
+                'username': user.get('username', 'Unknown User'),
+                'user_id': user.get('id', ''),
+                'photo_url': user.get('photo_url', url_for('static', filename='img/avatar.png'))
+            }
+        except Exception as e:
+            logger.error(f"Error parsing initData: {str(e)}")
+    return render_template("profile.html", username=user_data.get('username', 'VIP'), user_id=user_data.get('user_id', ''), photo_url=user_data.get('photo_url', ''))
 
 @app.route("/settings")
 def settings():

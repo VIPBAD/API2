@@ -1,26 +1,11 @@
 import os
-from flask import Flask, request, render_template, url_for, redirect
-import yt_dlp
-import logging
-import glob
-import random
+from flask import Flask, request, render_template, url_for
+from search import search_bp  # import search blueprint
 
 app = Flask(__name__)
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Pick a random .txt cookie file from cookies/ folder
-def cookie_txt_file():
-    folder_path = os.path.join(os.getcwd(), "cookies")
-    filename = os.path.join(folder_path, "logs.csv")
-    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
-    if not txt_files:
-        raise FileNotFoundError("No .txt files found in the specified folder.")
-    cookie_txt = random.choice(txt_files)
-    with open(filename, 'a') as file:
-        file.write(f'Chosen File: {cookie_txt}\n')
-    return cookie_txt
+# Register search blueprint
+app.register_blueprint(search_bp, url_prefix="/search")
 
 @app.route("/")
 def home():
@@ -39,48 +24,9 @@ def player():
     return render_template("player.html", audio_url=audio_url, title=title, thumb=thumb, artist=artist)
 
 @app.route("/search")
-def search():
+def search_page():
     q = request.args.get("q", "")
-    results = []
-    if q:
-        ydl_opts = {
-            'quiet': True,
-            'no_warnings': True,
-            'nocheckcertificate': True,
-            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'geo_bypass': True,
-            'noplaylist': False,
-            'ignoreerrors': True,
-            'format': 'bestaudio',
-            'cachedir': False,
-            'cookiefile': cookie_txt_file(),
-        }
-
-        try:
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(f"ytsearch5:{q}", download=False)
-                if info and 'entries' in info:
-                    for entry in info['entries']:
-                        if entry:
-                            title = entry.get('title', 'Unknown Title')
-                            artist = entry.get('uploader', 'Unknown')
-                            thumb = entry.get('thumbnail', '')
-                            audio = ''
-                            if 'requested_formats' in entry and entry['requested_formats']:
-                                audio = entry['requested_formats'][0]['url']
-                            elif 'url' in entry:
-                                audio = entry['url']
-                            results.append({
-                                "title": title,
-                                "artist": artist,
-                                "thumb": thumb,
-                                "audio": audio
-                            })
-        except Exception as e:
-            logger.error(f"Search error for query {q}: {str(e)}")
-            results = []
-
-    return render_template("search.html", q=q, results=results)
+    return render_template("search.html", q=q, results=[])
 
 @app.route("/profile")
 def profile():

@@ -34,7 +34,7 @@
       align-items: center;
       justify-content: center;
       min-height: 80vh;
-      gap: 15px;
+      gap: 20px;
     }
     .big-icon img {
       width: 150px;
@@ -58,8 +58,8 @@
   <header class="topbar">
     <button class="back-btn" onclick="location.href='/'">✕</button>
     <div class="title">
-      <img src="{{ avatar }}" alt="avatar">
-      Telegram Music
+      <img src="https://graph.org/file/38652f7c83abd11b039c0-1d0a46d1e4e762cbc6.jpg" alt="avatar">
+      ʙᴀᴅ ᴍᴜsɪᴄ
     </div>
     <div class="top-actions">▾</div>
   </header>
@@ -68,7 +68,6 @@
     <div class="big-icon">
       <img src="{{ thumb }}" alt="Album Art">
     </div>
-    <h1 class="app-title">{{ title }}</h1>
 
     <a class="join-btn big" href="{{ url_for('player') }}?audio={{ audio_url|urlencode }}&title={{ title|urlencode }}&thumb={{ thumb|urlencode }}">
       Join Music

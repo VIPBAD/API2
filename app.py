@@ -30,7 +30,32 @@ def search():
 
 @app.route("/profile")
 def profile():
-    return render_template("profile.html")
+    username = request.args.get("username", "VIP")
+    return render_template("profile.html", username=username)
+
+@app.route("/settings")
+def settings():
+    return render_template("settings.html")
+
+@app.route("/favorites")
+def favorites():
+    return render_template("favorites.html")
+
+@app.route("/recently-played")
+def recently_played():
+    return render_template("recently_played.html")
+
+@app.route("/connected-users")
+def connected_users():
+    return render_template("connected_users.html")
+
+@app.route("/faq")
+def faq():
+    return render_template("faq.html")
+
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
 
 if __name__ == "__main__":
     PORT = int(os.environ.get("PORT", 5000))

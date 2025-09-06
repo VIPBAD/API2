@@ -127,18 +127,12 @@
     <audio id="audio" preload="auto" src="{{ audio_url }}"></audio>
   </main>
 
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <a class="nav-item active" href="{{ url_for('player', audio=audio_url, title=title, thumb=thumb, artist=artist) }}">
-      <span>🏠</span> Home
-    </a>
-    <a class="nav-item" href="{{ url_for('search') }}">
-      <span>🔍</span> Search
-    </a>
-    <a class="nav-item" href="{{ url_for('profile') }}">
-      <span>⚙️</span> Settings
-    </a>
-  </nav>
+  <div class="nav-bar">
+    <a href="{{ url_for('home') }}"><img src="/static/img/home.png" alt="Home"></a>
+    <a href="{{ url_for('search') }}"><img src="/static/img/search.png" alt="Search"></a>
+    <a href="{{ url_for('profile') }}"><img src="/static/img/profile.png" alt="Profile"></a>
+    <a href="{{ url_for('settings') }}"><img src="/static/img/settings.png" alt="Settings"></a>
+  </div>
 
   <script>
     const audio = document.getElementById('audio');
@@ -151,12 +145,12 @@
       if (audio.paused) {
         audio.play().then(() => {
           playBtn.textContent = '⏸';
-        }).catch(()=> {
-          playBtn.textContent = '⏵';
+        }).catch(() => {
+          playBtn.textContent = '💿';
         });
       } else {
         audio.pause();
-        playBtn.textContent = '⏵';
+        playBtn.textContent = '⏹️';
       }
     }
 
@@ -170,7 +164,7 @@
     audio.addEventListener('timeupdate', () => {
       const cur = Math.floor(audio.currentTime);
       const total = Math.floor(audio.duration || 0);
-      function fmt(s){ return Math.floor(s/60)+':' + String(s%60).padStart(2,'0'); }
+      function fmt(s) { return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
       document.getElementById('current').textContent = fmt(cur);
       document.getElementById('total').textContent = fmt(total);
       const seek = document.getElementById('seek');

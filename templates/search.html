@@ -32,11 +32,12 @@
     </section>
   </main>
 
-  <nav class="bottom-nav">
-    <a class="nav-item" href="{{ url_for('home') }}">🏠</a>
-    <a class="nav-item active" href="{{ url_for('search') }}">🔍</a>
-    <a class="nav-item" href="{{ url_for('profile') }}">👤</a>
-  </nav>
+  <div class="nav-bar">
+    <a href="{{ url_for('home') }}"><img src="/static/img/home.png" alt="Home"></a>
+    <a href="{{ url_for('search') }}"><img src="/static/img/search.png" alt="Search"></a>
+    <a href="{{ url_for('profile') }}"><img src="/static/img/profile.png" alt="Profile"></a>
+    <a href="{{ url_for('settings') }}"><img src="/static/img/settings.png" alt="Settings"></a>
+  </div>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

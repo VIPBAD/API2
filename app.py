@@ -112,5 +112,5 @@ def terms():
     return render_template("terms.html")
 
 if __name__ == "__main__":
-    PORT = int(os.environ.get("PORT", 5000))
+    PORT = int(os.environ.get("PORT", 5050))
     app.run(host="0.0.0.0", port=PORT, debug=True)

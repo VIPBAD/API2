@@ -3,61 +3,79 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{{ title }}</title>
+  <title>Settings</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="mobile dark">
   <header class="topbar">
     <button class="back-btn" onclick="location.href='{{ url_for('home') }}'">←</button>
-    <div class="title">Now Playing</div>
+    <div class="title">Settings</div>
     <div class="top-actions">⋮</div>
   </header>
 
-  <main class="player-screen">
-    <div class="album-wrap">
-      <img id="player-thumb" class="album-large" src="{{ thumb }}" alt="Album">
+  <main class="settings-screen">
+    <div class="profile-header">
+      <img src="https://graph.org/file/38652f7c83abd11b039c0-1d0a46d1e4e762cbc6.jpg" alt="Profile" class="profile-img">
+      <div class="profile-name">Bad Music</div>
     </div>
 
-    <div class="track-info">
-      <div class="track-title" id="title">{{ title }}</div>
-      <div class="track-artist" id="artist">{{ artist }}</div>
+    <div class="stats">
+      <span>3</span>
+      <span>0</span>
+      <span>0m</span>
+      <div class="labels">
+        <span>Recent</span>
+        <span>Played</span>
+        <span>Duration</span>
+      </div>
     </div>
 
-    <div class="progress">
-      <span id="current">0:00</span>
-      <input id="seek" type="range" min="0" max="100" value="0" />
-      <span id="total">0:00</span>
+    <div class="settings-list">
+      <a href="#" class="setting-item">
+        <span class="icon">♥</span>
+        <span>Favorites</span>
+        <span>0 songs</span>
+        <span class="arrow">></span>
+      </a>
+      <a href="#" class="setting-item">
+        <span class="icon">⏳</span>
+        <span>Recently Played</span>
+        <span>Your listening history</span>
+        <span class="arrow">></span>
+      </a>
+      <a href="#" class="setting-item">
+        <span class="icon">⚙️</span>
+        <span>Settings</span>
+        <span>App settings and customization</span>
+        <span class="arrow">></span>
+      </a>
+      <a href="#" class="setting-item">
+        <span class="icon">👥</span>
+        <span>Connected Users</span>
+        <span>See who's listening</span>
+        <span class="arrow">></span>
+      </a>
+      <a href="#" class="setting-item">
+        <span class="icon">❓</span>
+        <span>FAQ</span>
+        <span>Frequently asked questions</span>
+        <span class="arrow">></span>
+      </a>
+      <a href="#" class="setting-item">
+        <span class="icon">📜</span>
+        <span>Terms & Conditions</span>
+        <span>Terms of service</span>
+        <span class="arrow">></span>
+      </a>
     </div>
 
-    <div class="controls">
-      <button class="ctrl">⏮</button>
-      <button id="playBtn" class="play-prim" onclick="togglePlay()">⏵</button>
-      <button class="ctrl">⏭</button>
-    </div>
-
-    <div class="bottom-actions">
-      <button class="circle">♡</button>
-      <div class="spacer"></div>
-      <button class="circle">↻</button>
-    </div>
-
-    <audio id="audio" preload="auto" src="{{ audio_url }}"></audio>
+    <nav class="bottom-nav elevated">
+      <a class="nav-item" href="{{ url_for('home') }}">🏠</a>
+      <a class="nav-item" href="{{ url_for('search') }}">🔍</a>
+      <a class="nav-item active" href="{{ url_for('profile') }}">👤</a>
+    </nav>
   </main>
 
-  <nav class="bottom-nav elevated">
-    <a class="nav-item" href="{{ url_for('home') }}">🏠</a>
-    <a class="nav-item" href="{{ url_for('search') }}">🔍</a>
-    <a class="nav-item active" href="{{ url_for('profile') }}">👤</a>
-  </nav>
-
-  <script>
-    // small inline initial values for JS to read
-    const initial = {
-      audioUrl: "{{ audio_url }}",
-      title: "{{ title }}",
-      thumb: "{{ thumb }}"
-    }
-  </script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

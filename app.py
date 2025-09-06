@@ -1,7 +1,11 @@
 import os
-from flask import Flask, request, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for
+from search import search_bp  # import search blueprint
 
 app = Flask(__name__)
+
+# Register search blueprint
+app.register_blueprint(search_bp, url_prefix="/search")
 
 @app.route("/")
 def home():
@@ -20,13 +24,9 @@ def player():
     return render_template("player.html", audio_url=audio_url, title=title, thumb=thumb, artist=artist)
 
 @app.route("/search")
-def search():
+def search_page():
     q = request.args.get("q", "")
-    results = [
-        {"title": "Rondi Tere Layi", "artist": "Speed Records", "thumb": url_for('static', filename='img/sample1.jpg'), "audio": ""},
-        {"title": "Sample Track", "artist": "Artist", "thumb": url_for('static', filename='img/sample2.jpg'), "audio": ""},
-    ]
-    return render_template("search.html", q=q, results=results)
+    return render_template("search.html", q=q, results=[])
 
 @app.route("/profile")
 def profile():

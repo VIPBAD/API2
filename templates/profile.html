@@ -1,81 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Settings</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #333;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .profile-info {
+            display: flex;
+            align-items: center;
+            padding: 20px 15px;
+        }
+        .profile-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .profile-info h2 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background-color: #222;
+            margin: 0 15px;
+            border-radius: 10px;
+        }
+        .stats div {
+            text-align: center;
+        }
+        .stats span {
+            display: block;
+            color: #888;
+            font-size: 12px;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #333;
+        }
+        .menu-item img {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+        }
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #333;
+        }
+        .nav-bar img {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
 </head>
-<body class="mobile dark">
-  <header class="topbar">
-    <button class="back-btn" onclick="location.href='{{ url_for('home') }}'">←</button>
-    <div class="title">Settings</div>
-    <div class="top-actions">⋮</div>
-  </header>
-
-  <main class="settings-screen">
-    <div class="profile-header">
-      <img src="https://graph.org/file/38652f7c83abd11b039c0-1d0a46d1e4e762cbc6.jpg" alt="Profile" class="profile-img">
-      <div class="profile-name">Bad Music</div>
+<body>
+    <div class="header">
+        <a href="/home"><img src="/static/img/back.png" alt="Back" style="width: 20px; height: 20px;"></a>
+        <h1>Telegram Music</h1>
+        <div>
+            <img src="/static/img/menu.png" alt="Menu" style="width: 20px; height: 20px;">
+            <img src="/static/img/more.png" alt="More" style="width: 20px; height: 20px;">
+        </div>
     </div>
-
+    <div class="profile-info">
+        <img src="https://graph.org/file/38652f7c83abd11b039c0-1d0a46d1e4e762cbc6.jpg" alt="Profile">
+        <h2>{{ username }} Bad Music</h2>
+    </div>
     <div class="stats">
-      <span>3</span>
-      <span>0</span>
-      <span>0m</span>
-      <div class="labels">
-        <span>Recent</span>
-        <span>Played</span>
-        <span>Duration</span>
-      </div>
+        <div><strong>3</strong><span>Recent</span></div>
+        <div><strong>0</strong><span>Played</span></div>
+        <div><strong>0m</strong><span>Duration</span></div>
     </div>
-
-    <div class="settings-list">
-      <a href="#" class="setting-item">
-        <span class="icon">♥</span>
-        <span>Favorites</span>
-        <span>0 songs</span>
-        <span class="arrow">></span>
-      </a>
-      <a href="#" class="setting-item">
-        <span class="icon">⏳</span>
-        <span>Recently Played</span>
-        <span>Your listening history</span>
-        <span class="arrow">></span>
-      </a>
-      <a href="#" class="setting-item">
-        <span class="icon">⚙️</span>
+    <a href="/settings" class="menu-item">
+        <img src="/static/img/settings.png" alt="Settings">
         <span>Settings</span>
-        <span>App settings and customization</span>
-        <span class="arrow">></span>
-      </a>
-      <a href="#" class="setting-item">
-        <span class="icon">👥</span>
+        <span style="margin-left: auto;">&gt;</span>
+    </a>
+    <a href="/favorites" class="menu-item">
+        <img src="/static/img/favorites.png" alt="Favorites">
+        <span>Favorites</span>
+        <span style="margin-left: auto;">&gt;</span>
+        <span>0 songs</span>
+    </a>
+    <a href="/recently-played" class="menu-item">
+        <img src="/static/img/recent.png" alt="Recently Played">
+        <span>Recently Played</span>
+        <span style="margin-left: auto;">&gt;</span>
+        <span>Your listening history</span>
+    </a>
+    <a href="/connected-users" class="menu-item">
+        <img src="/static/img/users.png" alt="Connected Users">
         <span>Connected Users</span>
+        <span style="margin-left: auto;">&gt;</span>
         <span>See who's listening</span>
-        <span class="arrow">></span>
-      </a>
-      <a href="#" class="setting-item">
-        <span class="icon">❓</span>
+    </a>
+    <a href="/faq" class="menu-item">
+        <img src="/static/img/faq.png" alt="FAQ">
         <span>FAQ</span>
+        <span style="margin-left: auto;">&gt;</span>
         <span>Frequently asked questions</span>
-        <span class="arrow">></span>
-      </a>
-      <a href="#" class="setting-item">
-        <span class="icon">📜</span>
+    </a>
+    <a href="/terms" class="menu-item">
+        <img src="/static/img/terms.png" alt="Terms & Conditions">
         <span>Terms & Conditions</span>
+        <span style="margin-left: auto;">&gt;</span>
         <span>Terms of service</span>
-        <span class="arrow">></span>
-      </a>
+    </a>
+    <div class="nav-bar">
+        <a href="/home"><img src="/static/img/home.png" alt="Home"></a>
+        <a href="/search"><img src="/static/img/search.png" alt="Search"></a>
+        <a href="/profile"><img src="/static/img/profile.png" alt="Profile"></a>
+        <a href="/settings"><img src="/static/img/settings.png" alt="Settings"></a>
     </div>
-
-    <nav class="bottom-nav elevated">
-      <a class="nav-item" href="{{ url_for('home') }}">🏠</a>
-      <a class="nav-item" href="{{ url_for('search') }}">🔍</a>
-      <a class="nav-item active" href="{{ url_for('profile') }}">👤</a>
-    </nav>
-  </main>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

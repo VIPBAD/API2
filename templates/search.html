@@ -5,29 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Search</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script>
-    async function doSearch(event) {
-      event.preventDefault();
-      const query = document.getElementById("q").value;
-      const res = await fetch(`/search/api?q=${encodeURIComponent(query)}`);
-      const data = await res.json();
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "";
-      data.forEach(r => {
-        const a = document.createElement("a");
-        a.className = "result-item";
-        a.href = `/player?audio=${encodeURIComponent(r.audio)}&title=${encodeURIComponent(r.title)}&thumb=${encodeURIComponent(r.thumb)}&artist=${encodeURIComponent(r.artist)}`;
-        a.innerHTML = `
-          <img src="${r.thumb}" alt="" />
-          <div class="r-info">
-            <div class="r-title">${r.title}</div>
-            <div class="r-sub">${r.artist}</div>
-          </div>
-        `;
-        resultsDiv.appendChild(a);
-      });
-    }
-  </script>
 </head>
 <body class="mobile dark">
   <header class="topbar">
@@ -37,20 +14,30 @@
   </header>
 
   <main class="list-screen">
-    <form class="search-box" onsubmit="doSearch(event)">
-      <input id="q" type="search" name="q" placeholder="Search songs, artists..." value="{{ q }}" />
+    <form class="search-box" action="{{ url_for('search') }}" method="get">
+      <input type="search" name="q" placeholder="Search songs, artists..." value="{{ q }}" />
       <button type="submit">🔎</button>
     </form>
 
-    <section id="results" class="results">
-      <!-- results will load here -->
+    <section class="results">
+      {% for r in results %}
+      <a class="result-item" href="{{ url_for('player') }}?audio={{ r.audio|urlencode }}&title={{ r.title|urlencode }}&thumb={{ r.thumb|urlencode }}&artist={{ r.artist|urlencode }}">
+        <img src="{{ r.thumb }}" alt="" />
+        <div class="r-info">
+          <div class="r-title">{{ r.title }}</div>
+          <div class="r-sub">{{ r.artist }}</div>
+        </div>
+      </a>
+      {% endfor %}
     </section>
   </main>
 
   <nav class="bottom-nav">
     <a class="nav-item" href="{{ url_for('home') }}">🏠</a>
-    <a class="nav-item active" href="{{ url_for('search_page') }}">🔍</a>
+    <a class="nav-item active" href="{{ url_for('search') }}">🔍</a>
     <a class="nav-item" href="{{ url_for('profile') }}">👤</a>
   </nav>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

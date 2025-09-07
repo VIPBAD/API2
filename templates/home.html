@@ -1,80 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px;
-      background: #111;
-      color: #fff;
-    }
-    .topbar .title {
-      font-weight: bold;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .topbar .title img {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid #444;
-    }
-    .center-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 80vh;
-      gap: 20px;
-    }
-    .big-icon img {
-      width: 150px;
-      height: 150px;
-      border-radius: 20px;
-      object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-    .join-btn {
-      background: #1da1f2;
-      color: white;
-      text-decoration: none;
-      padding: 12px 25px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-    }
-  </style>
 </head>
 <body class="mobile">
   <header class="topbar">
-    <button class="back-btn" onclick="location.href='/'">✕</button>
-    <div class="title">
-      <img src="https://graph.org/file/38652f7c83abd11b039c0-1d0a46d1e4e762cbc6.jpg" alt="avatar">
-      ʙᴀᴅ ᴍᴜsɪᴄ
-    </div>
-    <div class="top-actions">▾</div>
+    <a href="#" onclick="history.back();return false;">✕</a>
+    <div class="title">Alexa Music 🎶</div>
+    <div class="menu">⋮</div>
   </header>
 
   <main class="center-screen">
     <div class="big-icon">
-      <img src="{{ thumb }}" alt="Album Art">
+      <img src="{{ thumb }}" alt="thumb" style="width:100%;height:100%;border-radius:16px;object-fit:cover">
     </div>
-
-    <a class="join-btn big" href="{{ url_for('player') }}?audio={{ audio_url|urlencode }}&title={{ title|urlencode }}&thumb={{ thumb|urlencode }}">
-      Join Music
-    </a>
+    <h1 class="app-title">{{ title }}</h1>
+    <a class="join-btn big" href="/profile">Open Profile</a>
+    <a class="join-btn" href="/player?audio={{ audio_url|urlencode }}&title={{ title|urlencode }}&thumb={{ thumb|urlencode }}">Open Player</a>
   </main>
 
-  <nav class="bottom-nav"></nav>
+  <nav class="bottom-nav elevated">
+    <a class="nav-item active" href="/">Home</a>
+    <a class="nav-item" href="/player">Room</a>
+    <a class="nav-item" href="/profile">You</a>
+  </nav>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

@@ -1,152 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            border-bottom: 1px solid #333;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 18px;
-        }
-        .profile-info {
-            display: flex;
-            align-items: center;
-            padding: 20px 15px;
-        }
-        .profile-info img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
-        .profile-info h2 {
-            margin: 0;
-            font-size: 16px;
-        }
-        .profile-info p {
-            margin: 5px 0 0;
-            font-size: 12px;
-            color: #888;
-        }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background-color: #222;
-            margin: 0 15px;
-            border-radius: 10px;
-        }
-        .stats div {
-            text-align: center;
-        }
-        .stats span {
-            display: block;
-            color: #888;
-            font-size: 12px;
-        }
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #333;
-        }
-        .menu-item img {
-            width: 20px;
-            height: 20px;
-            margin-right: 15px;
-        }
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #1a1a1a;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #333;
-        }
-        .nav-bar img {
-            width: 20px;
-            height: 20px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ username }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <div class="header">
-        <a href="/home"><img src="/static/img/back.png" alt="Back" style="width: 20px; height: 20px;"></a>
-        <h1>Telegram Music</h1>
-        <div>
-            <img src="/static/img/menu.png" alt="Menu" style="width: 20px; height: 20px;">
-            <img src="/static/img/more.png" alt="More" style="width: 20px; height: 20px;">
-        </div>
+<body class="mobile profile-screen">
+  <header class="topbar">
+    <a href="/">✕</a>
+    <div class="title">Alexa Music</div>
+    <div class="menu">⋮</div>
+  </header>
+
+  <div class="profile-card">
+    <img class="avatar" src="{{ photo_url }}" alt="avatar">
+    <div>
+      <div class="profile-name">{{ username }}</div>
+      <div class="profile-id">ID: {{ user_id }}</div>
+      {% if first_name %}
+      <div class="profile-id">Name: {{ first_name }}</div>
+      {% endif %}
     </div>
-    <div class="profile-info">
-        <img src="{{ photo_url }}" alt="Profile">
-        <div>
-            <h2>{{ username }}</h2>
-            <p>User ID: {{ user_id }}</p>
-        </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="num">0</div>
+      <div class="label">Favorites</div>
     </div>
-    <div class="stats">
-        <div><strong>3</strong><span>Recent</span></div>
-        <div><strong>0</strong><span>Played</span></div>
-        <div><strong>0m</strong><span>Duration</span></div>
+    <div class="stat">
+      <div class="num">0</div>
+      <div class="label">Plays</div>
     </div>
-    <a href="/settings" class="menu-item">
-        <img src="/static/img/settings.png" alt="Settings">
-        <span>Settings</span>
-        <span style="margin-left: auto;">&gt;</span>
-    </a>
-    <a href="/favorites" class="menu-item">
-        <img src="/static/img/favorites.png" alt="Favorites">
-        <span>Favorites</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>0 songs</span>
-    </a>
-    <a href="/recently-played" class="menu-item">
-        <img src="/static/img/recent.png" alt="Recently Played">
-        <span>Recently Played</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>Your listening history</span>
-    </a>
-    <a href="/connected-users" class="menu-item">
-        <img src="/static/img/users.png" alt="Connected Users">
-        <span>Connected Users</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>See who's listening</span>
-    </a>
-    <a href="/faq" class="menu-item">
-        <img src="/static/img/faq.png" alt="FAQ">
-        <span>FAQ</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>Frequently asked questions</span>
-    </a>
-    <a href="/terms" class="menu-item">
-        <img src="/static/img/terms.png" alt="Terms & Conditions">
-        <span>Terms & Conditions</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>Terms of service</span>
-    </a>
-    <div class="nav-bar">
-        <a href="/home"><img src="/static/img/home.png" alt="Home"></a>
-        <a href="/search"><img src="/static/img/search.png" alt="Search"></a>
-        <a href="/profile"><img src="/static/img/profile.png" alt="Profile"></a>
-        <a href="/settings"><img src="/static/img/settings.png" alt="Settings"></a>
-    </div>
+  </div>
+
+  <div class="menu">
+    <a class="menu-item" href="/favorites">Favorites</a>
+    <a class="menu-item" href="/recently-played">Recents</a>
+    <a class="menu-item" href="/settings">Settings</a>
+  </div>
+
+  <nav class="bottom-nav elevated">
+    <a class="nav-item" href="/">Home</a>
+    <a class="nav-item" href="/player">Room</a>
+    <a class="nav-item active" href="/profile">You</a>
+  </nav>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

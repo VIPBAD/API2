@@ -1,20 +1,22 @@
 import os
-from flask import Flask, request, render_template, url_for, jsonify
+import json
 import logging
 from urllib.parse import parse_qs, unquote_plus
-import json
+from flask import Flask, request, render_template, url_for, jsonify
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
-
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("alexamusic")
+
+# ---- Routes ----
 
 @app.route("/")
 def home():
-    # basic landing page; mini app can open with query params for audio/title/thumb/avatar
+    # Common params used by BotFather preview or direct links
     audio_url = request.args.get("audio", "")
     title = request.args.get("title", "Telegram Music")
     thumb = request.args.get("thumb", url_for('static', filename='img/default_album.png'))
+    # allow preview avatar for UI checks
     avatar = request.args.get("avatar", url_for('static', filename='img/avatar.png'))
     return render_template("home.html", audio_url=audio_url, title=title, thumb=thumb, avatar=avatar)
 
@@ -30,43 +32,49 @@ def player():
 @app.route("/profile")
 def profile():
     """
-    Telegram WebApp may send initData as query like:
-    ?initData=user=%7B%22id%22%3A12345%2C%22first_name%22%3A%22Bob%22%7D&auth_date=...
-    This function attempts to parse 'user' field (JSON) robustly without signature validation.
+    Parses initData-like query strings and falls back to provided avatar param.
+    Use avatar param for quick BotFather preview testing.
     """
-    init_data = request.args.get("initData", "") or request.args.get("init_data", "")
+    init_data = request.args.get("initData") or request.args.get("init_data") or ""
+    avatar_q = request.args.get("avatar") or request.args.get("photo_url") or ""
     user_data = {
         "username": "VIP",
         "user_id": "",
         "photo_url": url_for('static', filename='img/avatar.png'),
         "first_name": ""
     }
+
+    # explicit avatar param takes priority (handy for BotFather preview)
+    if avatar_q:
+        user_data["photo_url"] = avatar_q
+
     if init_data:
         try:
-            # if full query-string passed, parse properly
+            # If init_data looks like a query-string: user=%7B...%7D&auth_date=...
             if "=" in init_data and "&" in init_data:
                 parsed = parse_qs(init_data)
-                # find 'user' key (could be 'user' or 'user=')
                 user_json = parsed.get("user", ["{}"])[0]
                 user_json = unquote_plus(user_json)
             else:
-                # sometimes only user=... is provided directly
                 if init_data.startswith("user="):
                     user_json = unquote_plus(init_data.split("user=", 1)[1])
                 else:
-                    # try to treat init_data as plain json
                     user_json = unquote_plus(init_data)
-            user = json.loads(user_json) if user_json else {}
-            user_data["username"] = user.get("username") or f"{user.get('first_name','User')}"
-            user_data["first_name"] = user.get("first_name", "")
-            user_data["user_id"] = user.get("id", "")
-            # Telegram gives photo_url sometimes - else default
-            user_data["photo_url"] = user.get("photo_url") or url_for('static', filename='img/avatar.png')
+            if user_json:
+                user = json.loads(user_json)
+                user_data["username"] = user.get("username") or user.get("first_name") or user_data["username"]
+                user_data["first_name"] = user.get("first_name", "")
+                user_data["user_id"] = user.get("id", "")
+                # possible photo fields
+                photo_url = user.get("photo_url") or user.get("photo") or ""
+                if photo_url:
+                    user_data["photo_url"] = photo_url
         except Exception as e:
             logger.warning("profile parsing failed: %s", e)
+
     return render_template("profile.html", **user_data)
 
-# small API to demonstrate favorites placeholder (optional)
+# small API for favorites (demo)
 FAVORITES = []
 
 @app.route("/api/favorites", methods=["GET", "POST", "DELETE"])
@@ -84,6 +92,11 @@ def api_favorites():
         if audio:
             FAVORITES[:] = [f for f in FAVORITES if f.get("audio") != audio]
         return jsonify({"ok": True, "count": len(FAVORITES)})
+
+# debug helper to inspect what BotFather / telegram opens
+@app.route("/debug-init")
+def debug_init():
+    return {"query": request.query_string.decode(), "args": request.args}
 
 if __name__ == "__main__":
     PORT = int(os.environ.get("PORT", 5050))

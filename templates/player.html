@@ -1,20 +1,15 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ title }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
 <body class="mobile player-screen">
   <header class="topbar">
-    <a href="/">✕</a>
-    <div class="title">Alexa Music</div>
-    <div class="menu">⋮</div>
+    <a href="/">✕</a><div class="title">Alexa Music</div><div class="menu">⋮</div>
   </header>
 
-  <div class="album-wrap">
-    <img id="player-thumb" class="album-large" src="{{ thumb }}" alt="album">
+  <div class="album-wrap" style="padding:22px 18px 6px;">
+    <img id="player-thumb" class="album-large" src="{{ thumb }}" alt="album"
+         onerror="this.onerror=null;this.src='{{ url_for('static', filename='img/default_album.png') }}'">
   </div>
 
   <div class="track-info">

@@ -1,39 +1,31 @@
 :root{
-  --bg:#0d0f11;
-  --muted:#9aa0a6;
-  --accent:#6ea5ff;
-  --card:rgba(255,255,255,0.03);
+  --bg:#0d0f11; --muted:#9aa0a6; --accent:#6ea5ff;
 }
-
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0d0f11 0%, #131416 100%);color:#fff;-webkit-font-smoothing:antialiased}
+body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0d0f11 0%, #0f1113 100%);color:#fff;-webkit-font-smoothing:antialiased}
 .mobile{max-width:420px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:100px}
 .topbar{display:flex;align-items:center;gap:10px;padding:12px 14px;background:transparent}
 .topbar a{color:#fff;text-decoration:none;font-size:18px}
 .title{flex:1;font-weight:600}
-.center-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:24px}
-.big-icon{width:140px;height:140px;border-radius:18px;background:linear-gradient(135deg, rgba(110,165,255,0.12), rgba(168,92,255,0.08));display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px rgba(0,0,0,.6);margin-bottom:18px}
-.app-title{font-size:20px;margin:0 0 18px 0}
-.join-btn{display:inline-block;padding:10px 20px;border-radius:12px;background:linear-gradient(90deg,var(--accent),#9b6cff);color:#fff;text-decoration:none;font-weight:600;margin:6px}
-.join-btn.big{padding:12px 28px;border-radius:18px}
-
-.player-screen{padding:12px 16px}
-.album-large{width:260px;height:260px;border-radius:18px;object-fit:cover;box-shadow: 0 20px 40px rgba(0,0,0,0.6);display:block;margin:0 auto}
-.track-info{padding:12px 8px;text-align:center}
-.track-title{font-size:18px;font-weight:700}
+.album-wrap{display:flex;justify-content:center;padding-top:8px}
+.album-large{width:160px;height:160px;border-radius:18px;object-fit:cover;box-shadow: 0 20px 40px rgba(0,0,0,0.6)}
+.track-title{font-size:20px;font-weight:700;margin:8px 0}
 .track-artist{color:var(--muted);margin-top:6px}
-.progress{display:flex;align-items:center;gap:10px;padding:12px 8px}
-.progress input[type="range"]{flex:1;-webkit-appearance:none;height:6px;background:rgba(255,255,255,0.06);border-radius:6px;outline:none}
-.progress input[type="range"]::-webkit-slider-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);-webkit-appearance:none}
+.join-btn{display:inline-block;padding:12px 28px;border-radius:28px;background:linear-gradient(90deg,var(--accent),#9b6cff);color:#fff;text-decoration:none;font-weight:600;border:none}
+.join-btn.big{padding:14px 36px;font-size:16px}
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;background:linear-gradient(180deg,#0e1012,#0c0d0f);backdrop-filter:blur(6px);padding:12px;border-radius:22px;display:flex;gap:28px;box-shadow:0 10px 30px rgba(0,0,0,0.6);width:92%}
+.bottom-nav .nav-item{color:rgba(255,255,255,0.75);text-decoration:none;font-size:16px;padding:6px 10px;border-radius:8px}
+.bottom-nav .nav-item.active{background:rgba(110,165,255,0.12);color:var(--accent)}
 
-.play-prim{width:80px;height:80px;border-radius:50%;background:linear-gradient(90deg,var(--accent),#9b6cff);border:none;color:#fff;font-size:20px;box-shadow:0 8px 30px rgba(110,165,255,0.18)}
-
+/* Profile */
 .profile-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:14px;border-radius:12px;display:flex;gap:12px;align-items:center;margin:12px}
 .avatar{width:64px;height:64px;border-radius:50%;object-fit:cover}
 .profile-name{font-weight:700;font-size:16px}
 .profile-id{color:var(--muted);font-size:13px}
 
-.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;background:linear-gradient(180deg,#0e1012,#0c0d0f);backdrop-filter:blur(6px);padding:12px;border-radius:22px;display:flex;gap:28px;box-shadow:0 10px 30px rgba(0,0,0,0.6);width:92%}
-.bottom-nav .nav-item{color:rgba(255,255,255,0.75);text-decoration:none;font-size:16px;padding:6px 10px;border-radius:8px}
-.bottom-nav .nav-item.active{background:rgba(110,165,255,0.12);color:var(--accent)}
-.menu{color:rgba(255,255,255,0.7)}
+/* Modal */
+.modal{position:fixed;left:0;right:0;top:0;bottom:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);z-index:60}
+.modal.show{display:flex}
+.modal-inner{background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent);padding:22px;border-radius:14px;max-width:360px;text-align:center;box-shadow:0 14px 50px rgba(0,0,0,0.6)}
+.muted{color:var(--muted);margin-bottom:12px}
+.modal-close{background:transparent;border:none;color:var(--muted);margin-top:8px}

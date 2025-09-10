@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #1a1a2e; color: #fff; }
+    .message { margin: 10px 0; }
+    .input-area { margin-top: 20px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; background-color: #16213e; padding: 10px 0; }
+  </style>
+</head>
+<body>
+  <h2>Chat</h2>
+  <div id="chat-messages">
+    <div class="message">Hello 👋</div>
+    <div class="message">Hi! How are you?</div>
+  </div>
+  <div class="input-area">
+    <input type="text" id="chat-input" placeholder="Type a message...">
+    <button onclick="sendMessage()">➤</button>
+    <a href="{{ chat_link }}" target="_blank">Join Group</a>
+  </div>
+  <div class="nav-bar">
+    <span class="nav-btn" onclick="window.location.href='/player'">🎵</span>
+    <span class="nav-btn" onclick="window.location.href='/search'">🔎</span>
+    <span class="nav-btn" onclick="window.location.href='/profile'">👤</span>
+    <span class="nav-btn" onclick="window.location.href='/setting'">⚙️</span>
+    <span class="nav-btn" onclick="window.location.href='/chating'">💬</span>
+  </div>
+  <script>
+    function sendMessage() {
+      const input = document.getElementById("chat-input");
+      if (input.value) {
+        const messages = document.getElementById("chat-messages");
+        const newMessage = document.createElement("div");
+        newMessage.className = "message";
+        newMessage.textContent = input.value;
+        messages.appendChild(newMessage);
+        input.value = "";
+      }
+    }
+  </script>
+</body>
+</html>

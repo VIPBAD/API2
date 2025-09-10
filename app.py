@@ -30,7 +30,10 @@ def home():
     audio_url = request.args.get("audio", "")
     title = request.args.get("title", "Telegram Music")
     thumb = request.args.get("thumb", url_for('static', filename='img/default_album.png'))
-    return render_template("home.html", audio_url=audio_url, title=title, thumb=thumb)
+    tg_param = request.args.get("tgWebAppStartParam", "")
+    if tg_param:
+        logger.info(f"Received tgWebAppStartParam: {tg_param}")
+    return render_template("home.html", audio_url=audio_url, title=title, thumb=thumb, tg_param=tg_param)
 
 @app.route("/player")
 def player():

@@ -1,44 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
   <title>Search</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #1a1a2e; color: #fff; }
+    .search-bar { margin-bottom: 20px; }
+    .result { margin: 10px 0; padding: 10px; background-color: #16213e; border-radius: 5px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; background-color: #16213e; padding: 10px 0; }
+  </style>
 </head>
-<body class="mobile dark">
-  <header class="topbar">
-    <button class="back-btn" onclick="location.href='{{ url_for('home') }}'">←</button>
-    <div class="title">Search</div>
-    <div class="top-actions">⋮</div>
-  </header>
-
-  <main class="list-screen">
-    <form class="search-box" action="{{ url_for('search') }}" method="get">
-      <input type="search" name="q" placeholder="Search songs, artists..." value="{{ q }}" />
-      <button type="submit">🔎</button>
-    </form>
-
-    <section class="results">
-      {% for r in results %}
-      <a class="result-item" href="{{ url_for('player') }}?audio={{ r.audio|urlencode }}&title={{ r.title|urlencode }}&thumb={{ r.thumb|urlencode }}&artist={{ r.artist|urlencode }}">
-        <img src="{{ r.thumb }}" alt="" />
-        <div class="r-info">
-          <div class="r-title">{{ r.title }}</div>
-          <div class="r-sub">{{ r.artist }}</div>
-        </div>
-      </a>
-      {% endfor %}
-    </section>
-  </main>
-
-  <div class="nav-bar">
-    <a href="{{ url_for('home') }}"><img src="/static/img/home.png" alt="Home"></a>
-    <a href="{{ url_for('search') }}"><img src="/static/img/search.png" alt="Search"></a>
-    <a href="{{ url_for('profile') }}"><img src="/static/img/profile.png" alt="Profile"></a>
-    <a href="{{ url_for('settings') }}"><img src="/static/img/settings.png" alt="Settings"></a>
+<body>
+  <h2>Search</h2>
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="Search...">
+    <button onclick="window.location.href='/search?q=' + document.getElementById('search-input').value">🔎</button>
   </div>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <div>
+    {% for r in results %}
+    <div class="result">
+      <b>{{ r.title }}</b><br>
+      {{ r.artist }}
+    </div>
+    {% endfor %}
+  </div>
+  <div class="nav-bar">
+    <span class="nav-btn" onclick="window.location.href='/player'">🎵</span>
+    <span class="nav-btn" onclick="window.location.href='/search'">🔎</span>
+    <span class="nav-btn" onclick="window.location.href='/profile'">👤</span>
+    <span class="nav-btn" onclick="window.location.href='/setting'">⚙️</span>
+    <span class="nav-btn" onclick="window.location.href='/chating'">💬</span>
+  </div>
 </body>
 </html>

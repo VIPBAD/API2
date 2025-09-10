@@ -1,114 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            border-bottom: 1px solid #333;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 18px;
-        }
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #333;
-        }
-        .menu-item img {
-            width: 20px;
-            height: 20px;
-            margin-right: 15px;
-        }
-        .slider-container {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #333;
-        }
-        .slider {
-            width: 100%;
-            margin-left: 15px;
-        }
-        .toggle {
-            margin-left: auto;
-        }
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #1a1a1a;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #333;
-        }
-        .nav-bar img {
-            width: 20px;
-            height: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Settings</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #1a1a2e; color: #fff; }
+    .option { margin: 15px 0; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; background-color: #16213e; padding: 10px 0; }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <a href="/profile"><img src="/static/img/back.png" alt="Back" style="width: 20px; height: 20px;"></a>
-        <h1>Telegram Music</h1>
-        <div>
-            <img src="/static/img/menu.png" alt="Menu" style="width: 20px; height: 20px;">
-            <img src="/static/img/more.png" alt="More" style="width: 20px; height: 20px;">
-        </div>
-    </div>
-    <a href="#" class="menu-item">
-        <img src="/static/img/theme.png" alt="Theme">
-        <span>Theme</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>Auto (follows Telegram)</span>
-    </a>
-    <a href="#" class="menu-item">
-        <img src="/static/img/colors.png" alt="Accent Colors">
-        <span>Accent Colors</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>Customize colors for each theme</span>
-    </a>
-    <div class="slider-container">
-        <img src="/static/img/sync.png" alt="Playback sync">
-        <span>Playback sync</span>
-        <span style="margin-left: auto;">5.0s</span>
-        <input type="range" min="0" max="10" value="5" class="slider" id="syncSlider">
-    </div>
-    <a href="#" class="menu-item">
-        <img src="/static/img/data.png" alt="Data Saver">
-        <span>Data Saver</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>Hide thumbnails to reduce data usage</span>
-        <input type="checkbox" class="toggle">
-    </a>
-    <a href="#" class="menu-item">
-        <img src="/static/img/about.png" alt="About">
-        <span>About</span>
-        <span style="margin-left: auto;">&gt;</span>
-        <span>Tg-tune v1.0 WebApp: 9.1</span>
-        <span>A powerful music player for Telegram.</span>
-    </a>
-    <div class="nav-bar">
-        <a href="/home"><img src="/static/img/home.png" alt="Home"></a>
-        <a href="/search"><img src="/static/img/search.png" alt="Search"></a>
-        <a href="/profile"><img src="/static/img/profile.png" alt="Profile"></a>
-        <a href="/settings"><img src="/static/img/settings.png" alt="Settings"></a>
-    </div>
+  <h2>Settings</h2>
+  <div class="option">🎨 Theme<br>Auto (follows Telegram)</div>
+  <div class="option">🌈 Accent Colors<br>Customize colors for each theme</div>
+  <div class="option">⏱️ Playback sync<br>5.0s<input type="range" min="0" max="10" step="0.5" value="5"></div>
+  <div class="option">📉 Data Saver<br>Hide thumbnails to reduce data usage<input type="checkbox"></div>
+  <div class="option">ℹ️ About<br>Tg-tune v1.0 WebApp: 9.1<br>A powerful music player for Telegram.</div>
+  <div class="nav-bar">
+    <span class="nav-btn" onclick="window.location.href='/player'">🎵</span>
+    <span class="nav-btn" onclick="window.location.href='/search'">🔎</span>
+    <span class="nav-btn" onclick="window.location.href='/profile'">👤</span>
+    <span class="nav-btn" onclick="window.location.href='/setting'">⚙️</span>
+    <span class="nav-btn" onclick="window.location.href='/chating'">💬</span>
+  </div>
 </body>
 </html>

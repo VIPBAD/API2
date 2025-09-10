@@ -1,63 +1,60 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Telegram Music</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0d0d0d;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      text-align: center;
+    }
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 20px;
+    }
+    .big-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: #4a90e2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .big-icon span {
+      font-size: 32px;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .join-btn {
+      background: #4a90e2;
+      color: white;
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      display: inline-block;
+    }
+  </style>
 </head>
-<body class="mobile player-screen">
-  <header class="topbar">
-    <a href="#" onclick="history.back();return false;">✕</a>
-    <div class="title">Alexa Music 🎶</div>
-    <div class="menu">⋮</div>
-  </header>
-
-  <div class="album-wrap" style="padding:22px 18px 6px;">
-    <img id="main-thumb" class="album-large" src="{{ thumb }}" alt="thumb"
-         onerror="this.onerror=null;this.src='{{ url_for('static', filename='img/default_album.png') }}'">
-  </div>
-
-  <div style="padding:8px 18px 0;">
-    <h2 class="track-title" id="pageTitle">{{ title }}</h2>
-    <div class="track-artist" id="pageArtist">Telegram Music</div>
-  </div>
-
-  <div style="padding:18px;text-align:center">
-    <button class="join-btn big" id="joinRoomBtn">🟣 Join Room</button>
-  </div>
-
-  <!-- Join Room Modal (hidden by default) -->
-  <div id="joinModal" class="modal">
-    <div class="modal-inner">
-      <h2>Alexa Music ⚡</h2>
-      <p class="muted">Tap to join the Room and start the live stream</p>
-      <button class="join-btn big" id="confirmJoin">🎧 Join Room</button>
-      <div style="font-size:13px;margin-top:8px;color:var(--muted)">We'll auto-seek to LIVE if a track is already playing</div>
-      <button class="modal-close" id="closeModal">Close</button>
+<body>
+  <main class="center">
+    <div class="big-icon">
+      <span>🎵</span>
     </div>
-  </div>
-
-  <nav class="bottom-nav elevated">
-    <a class="nav-item active" href="/">Home</a>
-    <a class="nav-item" href="/player">Room</a>
-    <a class="nav-item" href="/profile">You</a>
-  </nav>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-  <script>
-    // open modal when page param join=1 present (useful for direct deep-links)
-    (function(){
-      const params = new URLSearchParams(window.location.search || "");
-      if (params.get('join') === '1') {
-        window.openJoinModal && window.openJoinModal();
-      }
-      // if avatar param present, attempt to preload into DOM (for preview)
-      const avatar = "{{ avatar }}";
-      if (avatar && document.getElementById('main-thumb')) {
-        document.getElementById('main-thumb').src = avatar;
-      }
-    })();
-  </script>
+    <div class="title">Telegram Music</div>
+    <a href="#" class="join-btn">Join Music</a>
+  </main>
 </body>
 </html>

@@ -1,40 +1,42 @@
-<!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ title }}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
-<body class="mobile player-screen">
-  <header class="topbar">
-    <a href="/">✕</a><div class="title">Alexa Music</div><div class="menu">⋮</div>
-  </header>
-
-  <div class="album-wrap" style="padding:22px 18px 6px;">
-    <img id="player-thumb" class="album-large" src="{{ thumb }}" alt="album"
-         onerror="this.onerror=null;this.src='{{ url_for('static', filename='img/default_album.png') }}'">
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Player</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #1a1a2e; color: #fff; }
+    img { border-radius: 50%; margin-bottom: 15px; }
+    .controls { margin-top: 20px; }
+    .nav-btn { margin: 0 10px; font-size: 24px; cursor: pointer; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; background-color: #16213e; padding: 10px 0; }
+  </style>
+</head>
+<body>
+  <h2>{{ title }}</h2>
+  <div>{{ artist }}</div>
+  <div>
+    <audio controls>
+      <source src="{{ audio_url }}" type="audio/mpeg">
+    </audio>
   </div>
-
-  <div class="track-info">
-    <div id="title" class="track-title">{{ title }}</div>
-    <div id="artist" class="track-artist">{{ artist }}</div>
+  <div class="controls">
+    <span class="nav-btn">⏮</span>
+    <span class="nav-btn">⏵</span>
+    <span class="nav-btn">⏭</span>
   </div>
-
-  <div class="progress">
-    <button class="ctrl circle" onclick="rewind()">⟲10</button>
-    <input id="seek" type="range" min="0" max="100" value="0">
-    <button class="ctrl circle" onclick="forward()">10⟳</button>
+  <div>
+    <label>Vol</label>
+    <input type="range" min="0" max="1" step="0.1" value="1">
+    <span>♡</span>
+    <span>↻</span>
   </div>
-
-  <div style="text-align:center;padding:10px">
-    <button id="playBtn" class="play-prim" onclick="togglePlay()">⏵</button>
+  <div class="nav-bar">
+    <span class="nav-btn" onclick="window.location.href='/player'">🎵</span>
+    <span class="nav-btn" onclick="window.location.href='/search'">🔎</span>
+    <span class="nav-btn" onclick="window.location.href='/profile'">👤</span>
+    <span class="nav-btn" onclick="window.location.href='/setting'">⚙️</span>
+    <span class="nav-btn" onclick="window.location.href='/chating'">💬</span>
   </div>
-
-  <audio id="audio" src="{{ audio_url }}" preload="auto"></audio>
-
-  <nav class="bottom-nav elevated">
-    <a class="nav-item" href="/">Home</a>
-    <a class="nav-item active" href="/player">Room</a>
-    <a class="nav-item" href="/profile">You</a>
-  </nav>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

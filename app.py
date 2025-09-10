@@ -1,103 +1,121 @@
 import os
-import json
+from flask import Flask, request, render_template, url_for
+import yt_dlp
 import logging
-from urllib.parse import parse_qs, unquote_plus
-from flask import Flask, request, render_template, url_for, jsonify
+import glob
+import random
+import json
+from database import Database
 
-app = Flask(__name__, static_folder="static", template_folder="templates")
+app = Flask(__name__)
+
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("alexamusic")
+logger = logging.getLogger(__name__)
 
-# ---- Routes ----
+def cookie_txt_file():
+    folder_path = os.path.join(os.getcwd(), "cookies")
+    filename = os.path.join(folder_path, "logs.csv")
+    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
+    if not txt_files:
+        raise FileNotFoundError("No .txt files found in the specified folder.")
+    cookie_txt = random.choice(txt_files)
+    with open(filename, 'a') as file:
+        file.write(f'Chosen File: {cookie_txt}\n')
+    return cookie_txt
+
+db = Database()
 
 @app.route("/")
 def home():
-    # Common params used by BotFather preview or direct links
     audio_url = request.args.get("audio", "")
     title = request.args.get("title", "Telegram Music")
     thumb = request.args.get("thumb", url_for('static', filename='img/default_album.png'))
-    # allow preview avatar for UI checks
-    avatar = request.args.get("avatar", url_for('static', filename='img/avatar.png'))
-    return render_template("home.html", audio_url=audio_url, title=title, thumb=thumb, avatar=avatar)
+    return render_template("home.html", audio_url=audio_url, title=title, thumb=thumb)
 
 @app.route("/player")
 def player():
     audio_url = request.args.get("audio", "")
     title = request.args.get("title", "Unknown Title")
     thumb = request.args.get("thumb", url_for('static', filename='img/default_album.png'))
-    artist = request.args.get("artist", "Unknown")
-    avatar = request.args.get("avatar", url_for('static', filename='img/avatar.png'))
-    return render_template("player.html", audio_url=audio_url, title=title, thumb=thumb, artist=artist, avatar=avatar)
+    artist = request.args.get("artist", "YouTube")
+    tg = request.environ.get('HTTP_X_TELEGRAM_INIT_DATA')
+    if tg:
+        user_data = json.loads(tg.split('user=')[1].split('&')[0])
+        user_id = user_data.get('id')
+        db.save_history(user_id, title, 0)  # Placeholder duration
+    return render_template("play.html", audio_url=audio_url, title=title, thumb=thumb, artist=artist)
+
+@app.route("/search")
+def search():
+    q = request.args.get("q", "")
+    results = []
+    if q:
+        ydl_opts = {
+            'quiet': True,
+            'no_warnings': True,
+            'nocheckcertificate': True,
+            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'geo_bypass': True,
+            'noplaylist': False,
+            'ignoreerrors': True,
+            'format': 'bestaudio',
+            'cachedir': False,
+            'cookiefile': cookie_txt_file(),
+        }
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(f"ytsearch5:{q}", download=False)
+                if info and 'entries' in info:
+                    for entry in info['entries']:
+                        if entry:
+                            title = entry.get('title', 'Unknown Title')
+                            artist = entry.get('uploader', 'Unknown')
+                            thumb = entry.get('thumbnail', '')
+                            audio = ''
+                            if 'requested_formats' in entry and entry['requested_formats']:
+                                audio = entry['requested_formats'][0]['url']
+                            elif 'url' in entry:
+                                audio = entry['url']
+                            results.append({
+                                "title": title,
+                                "artist": artist,
+                                "thumb": thumb,
+                                "audio": audio
+                            })
+        except Exception as e:
+            logger.error(f"Search error for query {q}: {str(e)}")
+            results = []
+    return render_template("search.html", q=q, results=results)
 
 @app.route("/profile")
 def profile():
-    """
-    Parses initData-like query strings and falls back to provided avatar param.
-    Use avatar param for quick BotFather preview testing.
-    """
-    init_data = request.args.get("initData") or request.args.get("init_data") or ""
-    avatar_q = request.args.get("avatar") or request.args.get("photo_url") or ""
-    user_data = {
-        "username": "VIP",
-        "user_id": "",
-        "photo_url": url_for('static', filename='img/avatar.png'),
-        "first_name": ""
-    }
+    tg = request.environ.get('HTTP_X_TELEGRAM_INIT_DATA')
+    user_id = "0"
+    recent = 0
+    played = 0
+    duration = 0
+    if tg:
+        user_data = json.loads(tg.split('user=')[1].split('&')[0])
+        user_id = user_data.get('id')
+        history = db.get_recent_history(user_id)
+        recent = len(history)
+        played = sum(1 for h in history)
+        duration = sum(h.get('duration', 0) for h in history)
+    return render_template("profile.html", username=user_data.get('username', 'No username'), user_id=user_id, recent=recent, played=played, duration=duration)
 
-    # explicit avatar param takes priority (handy for BotFather preview)
-    if avatar_q:
-        user_data["photo_url"] = avatar_q
+@app.route("/chating")
+def chating():
+    tg = request.environ.get('HTTP_X_TELEGRAM_INIT_DATA')
+    chat_link = "https://t.me/TGINLINEMUSICBOT/Demo?startapp=-1002093247039"
+    if tg:
+        user_data = json.loads(tg.split('user=')[1].split('&')[0])
+        user_id = user_data.get('id')
+        # Real-time chat logic to be implemented with Telegram API
+    return render_template("chating.html", chat_link=chat_link)
 
-    if init_data:
-        try:
-            # If init_data looks like a query-string: user=%7B...%7D&auth_date=...
-            if "=" in init_data and "&" in init_data:
-                parsed = parse_qs(init_data)
-                user_json = parsed.get("user", ["{}"])[0]
-                user_json = unquote_plus(user_json)
-            else:
-                if init_data.startswith("user="):
-                    user_json = unquote_plus(init_data.split("user=", 1)[1])
-                else:
-                    user_json = unquote_plus(init_data)
-            if user_json:
-                user = json.loads(user_json)
-                user_data["username"] = user.get("username") or user.get("first_name") or user_data["username"]
-                user_data["first_name"] = user.get("first_name", "")
-                user_data["user_id"] = user.get("id", "")
-                # possible photo fields
-                photo_url = user.get("photo_url") or user.get("photo") or ""
-                if photo_url:
-                    user_data["photo_url"] = photo_url
-        except Exception as e:
-            logger.warning("profile parsing failed: %s", e)
-
-    return render_template("profile.html", **user_data)
-
-# small API for favorites (demo)
-FAVORITES = []
-
-@app.route("/api/favorites", methods=["GET", "POST", "DELETE"])
-def api_favorites():
-    if request.method == "GET":
-        return jsonify(FAVORITES)
-    if request.method == "POST":
-        item = request.json.get("item")
-        if item:
-            FAVORITES.append(item)
-        return jsonify({"ok": True, "count": len(FAVORITES)})
-    if request.method == "DELETE":
-        data = request.json or {}
-        audio = data.get("audio")
-        if audio:
-            FAVORITES[:] = [f for f in FAVORITES if f.get("audio") != audio]
-        return jsonify({"ok": True, "count": len(FAVORITES)})
-
-# debug helper to inspect what BotFather / telegram opens
-@app.route("/debug-init")
-def debug_init():
-    return {"query": request.query_string.decode(), "args": request.args}
+@app.route("/setting")
+def setting():
+    return render_template("setting.html")
 
 if __name__ == "__main__":
-    PORT = int(os.environ.get("PORT", 5050))
-    app.run(host="0.0.0.0", port=PORT, debug=True)
+    app.run(host="0.0.0.0", port=10000)

@@ -1,62 +1,57 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ username }}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
-<body class="mobile profile-screen">
-  <header class="topbar">
-    <a href="/">✕</a>
-    <div class="title">Alexa Music</div>
-    <div class="menu">⋮</div>
-  </header>
-
-  <div class="profile-card">
-    <img class="avatar" src="{{ photo_url or url_for('static', filename='img/avatar.png') }}"
-         alt="avatar"
-         onerror="this.onerror=null;this.src='{{ url_for('static', filename='img/avatar.png') }}'">
-    <div>
-      <div class="profile-name">{{ username }}</div>
-      <div class="profile-id">ID: {{ user_id }}</div>
-      {% if first_name %}
-      <div class="profile-id">Name: {{ first_name }}</div>
-      {% endif %}
-    </div>
-  </div>
-
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #1a1a2e; color: #fff; }
+    img { border-radius: 50%; margin-bottom: 15px; }
+    .stats { margin: 20px 0; }
+    .section { margin: 10px 0; }
+    .connected-users { display: flex; justify-content: center; gap: 10px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; background-color: #16213e; padding: 10px 0; }
+  </style>
+</head>
+<body>
+  <div id="profile"></div>
   <div class="stats">
-    <div class="stat"><div class="num">0</div><div class="label">Favorites</div></div>
-    <div class="stat"><div class="num">0</div><div class="label">Plays</div></div>
+    <div>Recent: {{ recent }}</div>
+    <div>Played: {{ played }}</div>
+    <div>Duration: {{ duration }}m</div>
   </div>
-
-  <div class="menu">
-    <a class="menu-item" href="/favorites">Favorites</a>
-    <a class="menu-item" href="/recently-played">Recents</a>
-    <a class="menu-item" href="/settings">Settings</a>
+  <div class="section">🎵 Recently Played Your listening history</div>
+  <div class="section">👥 Connected Users
+    <div class="connected-users" id="connected-users"></div>
   </div>
-
-  <nav class="bottom-nav elevated">
-    <a class="nav-item" href="/">Home</a>
-    <a class="nav-item" href="/player">Room</a>
-    <a class="nav-item active" href="/profile">You</a>
-  </nav>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <div class="section">❓ FAQ Frequently asked questions</div>
+  <div class="section">📜 Terms & Conditions Terms of service</div>
+  <div class="nav-bar">
+    <span class="nav-btn" onclick="window.location.href='/player'">🎵</span>
+    <span class="nav-btn" onclick="window.location.href='/search'">🔎</span>
+    <span class="nav-btn" onclick="window.location.href='/profile'">👤</span>
+    <span class="nav-btn" onclick="window.location.href='/setting'">⚙️</span>
+    <span class="nav-btn" onclick="window.location.href='/chating'">💬</span>
+  </div>
   <script>
-    // If Telegram WebApp is available, read user and update page or redirect.
-    (function(){
-      try {
-        if (window.Telegram && window.Telegram.WebApp) {
-          const tg = window.Telegram.WebApp;
-          const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
-          if (user) {
-            // if opened inside webapp, we can show values directly
-            document.querySelector('.profile-name').textContent = user.username || user.first_name || 'VIP';
-            document.querySelector('.profile-id').textContent = 'ID: ' + (user.id || '');
-            if (user.photo_url) {
-              document.querySelector('.avatar').src = user.photo_url;
-            }
-          }
-        }
-      } catch(e){/* ignore */ }
-    })();
+    const tg = window.Telegram.WebApp;
+    const user = tg.initDataUnsafe?.user;
+
+    if (user) {
+      document.getElementById("profile").innerHTML = `
+        <img src="${user.photo_url}" width="100"><br>
+        <b>${user.first_name} ${user.last_name || ""}</b><br>
+        @${user.username || "No username"}<br>
+        ID: ${user.id}
+      `;
+    } else {
+      document.getElementById("profile").innerText = "No user data found.";
+    }
+
+    // Placeholder for connected users (to be updated with real-time data)
+    const connectedUsers = document.getElementById("connected-users");
+    const dummyUsers = [{ id: 1, name: "User1" }, { id: 2, name: "User2" }];
+    connectedUsers.innerHTML = dummyUsers.map(u => `<div>${u.name}</div>`).join('');
   </script>
 </body>
 </html>
